@@ -5,7 +5,7 @@ import "gorm.io/gorm"
 type Repository interface {
 	ListCategory(userID int) ([]Category, error)
 	Save(category Category) (Category, error)
-	// Update(category Category) (Category, error)
+	Update(category Category) (Category, error)
 	FindByID(ID int) (Category, error)
 }
 
@@ -40,6 +40,16 @@ func (r *repository) Save(category Category) (Category, error) {
 func (r *repository) FindByID(ID int) (Category, error) {
 	var category Category
 	err := r.db.Preload("User").Where("id = ?", ID).Find(&category).Error
+
+	if err != nil {
+		return category, err
+	}
+
+	return category, nil
+}
+
+func (r *repository) Update(category Category) (Category, error) {
+	err := r.db.Save(&category).Error
 
 	if err != nil {
 		return category, err

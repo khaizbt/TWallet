@@ -1,10 +1,12 @@
 package category
 
+import "errors"
+
 type Service interface {
 	GetCategory(userID int) ([]Category, error)
-	// GetCamppaignByID(input CampaignUserInput) (Category, error)
+	GetDetailCategory(input CategoryUserInput) (Category, error)
 	CreateCategory(input CreateCategoryInput) (Category, error)
-	// UpdateCampaign(inputID CampaignUserInput, inputData CreateCategoryInput) (Category, error)
+	UpdateCampaign(inputID CategoryUserInput, inputData CreateCategoryInput) (Category, error)
 }
 
 type service struct {
@@ -51,28 +53,26 @@ func (s *service) CreateCategory(input CreateCategoryInput) (Category, error) {
 	return newCategory, nil
 }
 
-// func (s *service) UpdateCampaign(inputID CampaignUserInput, inputData CreateCategoryInput) (Campaign, error) {
-// 	campaign, err := s.repository.FindByID(inputID.ID)
+func (s *service) UpdateCampaign(inputID CategoryUserInput, inputData CreateCategoryInput) (Category, error) {
+	campaign, err := s.repository.FindByID(inputID.ID)
 
-// 	if err != nil {
-// 		return campaign, err
-// 	}
+	if err != nil {
+		return campaign, err
+	}
 
-// 	if campaign.UserID != inputData.User.ID { //Handle ketika edit campaign user lain
-// 		return campaign, errors.New("Not an owner of the campaign")
-// 	}
+	if campaign.UserID != inputData.User.ID { //Handle ketika edit campaign user lain
+		return campaign, errors.New("Not an owner of the campaign")
+	}
 
-// 	campaign.Name = inputData.Name
-// 	campaign.ShortDescription = inputData.ShortDescription
-// 	campaign.Description = inputData.Description
-// 	campaign.GoalAmount = inputData.GoalAmount
-// 	campaign.Perks = inputData.Perks
+	campaign.Name = inputData.Name
+	campaign.Description = inputData.Description
+	campaign.Type = inputData.Type
 
-// 	updatedCampaign, err := s.repository.Update(campaign)
+	updatedCampaign, err := s.repository.Update(campaign)
 
-// 	if err != nil {
-// 		return updatedCampaign, err
-// 	}
+	if err != nil {
+		return updatedCampaign, err
+	}
 
-// 	return updatedCampaign, nil
-// }
+	return updatedCampaign, nil
+}

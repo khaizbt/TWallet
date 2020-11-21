@@ -51,29 +51,29 @@ Service : Struct Input dengan menangkap id dari url manggil repo
 Repository : get campaign by id
 DB
 */
-// func (h *categoryHandler) GetCampaign(c *gin.Context) {
-// 	var input campaign.CampaignUserInput
+func (h *categoryHandler) GetCategoryDetail(c *gin.Context) {
+	var input category.CategoryUserInput
 
-// 	err := c.ShouldBindUri(&input)
+	err := c.ShouldBindUri(&input)
 
-// 	if err != nil {
-// 		responsError := helper.APIResponse("Get Campaign Detail Failed #CGD0871", http.StatusBadRequest, "fail", nil)
-// 		c.JSON(http.StatusBadRequest, responsError)
-// 		return
-// 	}
+	if err != nil {
+		responsError := helper.APIResponse("Get Campaign Detail Failed #CGD0871", http.StatusBadRequest, "fail", nil)
+		c.JSON(http.StatusBadRequest, responsError)
+		return
+	}
 
-// 	campaignDetail, err := h.service.GetCamppaignByID(input)
+	campaignDetail, err := h.service.GetDetailCategory(input)
 
-// 	if err != nil {
-// 		responsError := helper.APIResponse("Get Campaign Detail Failed #CGD0872", http.StatusBadRequest, "fail", nil)
-// 		c.JSON(http.StatusBadRequest, responsError)
-// 		return
-// 	}
+	if err != nil {
+		responsError := helper.APIResponse("Get Campaign Detail Failed #CGD0872", http.StatusBadRequest, "fail", nil)
+		c.JSON(http.StatusBadRequest, responsError)
+		return
+	}
 
-// 	response := helper.APIResponse("Get Campaign Detail Success", http.StatusOK, "success", campaign.FormatCampaignDetail(campaignDetail))
-// 	c.JSON(http.StatusOK, response)
-// 	return
-// }
+	response := helper.APIResponse("Get Campaign Detail Success", http.StatusOK, "success", category.FormatCampaignDetail(campaignDetail))
+	c.JSON(http.StatusOK, response)
+	return
+}
 
 func (h *categoryHandler) CreateCategory(c *gin.Context) {
 	var input category.CreateCategoryInput
@@ -112,39 +112,39 @@ Update Campaign
 5. Repository
 */
 
-// func (h *categoryHandler) UpdateCampaign(c *gin.Context) {
-// 	var inputID campaign.CampaignUserInput
+func (h *categoryHandler) UpdateCategory(c *gin.Context) {
+	var inputID category.CategoryUserInput
 
-// 	err := c.ShouldBindUri(&inputID)
+	err := c.ShouldBindUri(&inputID)
 
-// 	if err != nil {
-// 		responsError := helper.APIResponse("Update Campaign Failed #CGU0081", http.StatusBadRequest, "fail", nil)
-// 		c.JSON(http.StatusBadRequest, responsError)
-// 		return
-// 	}
+	if err != nil {
+		responsError := helper.APIResponse("Update Campaign Failed #CGU0081", http.StatusBadRequest, "fail", nil)
+		c.JSON(http.StatusBadRequest, responsError)
+		return
+	}
 
-// 	var inputData campaign.CreateCampaignInput
+	var inputData category.CreateCategoryInput
 
-// 	err = c.ShouldBindJSON(&inputData)
-// 	if err != nil {
-// 		errorMessage := gin.H{"errors": helper.FormatValidationError(err)}
+	err = c.ShouldBindJSON(&inputData)
+	if err != nil {
+		errorMessage := gin.H{"errors": helper.FormatValidationError(err)}
 
-// 		responsError := helper.APIResponse("Update Campaign Failed #CGU0085", http.StatusUnprocessableEntity, "fail", errorMessage)
-// 		c.JSON(http.StatusUnprocessableEntity, responsError)
-// 		return
-// 	}
+		responsError := helper.APIResponse("Update Campaign Failed #CGU0085", http.StatusUnprocessableEntity, "fail", errorMessage)
+		c.JSON(http.StatusUnprocessableEntity, responsError)
+		return
+	}
 
-// 	currentUser := c.MustGet("currentUser").(user.User)
+	currentUser := c.MustGet("currentUser").(user.User)
 
-// 	inputData.User = currentUser
+	inputData.User = currentUser
 
-// 	updatedCampaign, err := h.service.UpdateCampaign(inputID, inputData)
-// 	if err != nil {
-// 		responsError := helper.APIResponse("Update Campaign Failed #CGU0093", http.StatusBadRequest, "fail", nil)
-// 		c.JSON(http.StatusBadRequest, responsError)
-// 		return
-// 	}
+	updatedCampaign, err := h.service.UpdateCampaign(inputID, inputData)
+	if err != nil {
+		responsError := helper.APIResponse("Update Campaign Failed #CGU0093", http.StatusBadRequest, "fail", nil)
+		c.JSON(http.StatusBadRequest, responsError)
+		return
+	}
 
-// 	response := helper.APIResponse("Update Campaign Success", http.StatusOK, "success", campaign.FormatCampaign(updatedCampaign))
-// 	c.JSON(http.StatusOK, response)
-// }
+	response := helper.APIResponse("Update Campaign Success", http.StatusOK, "success", category.FormatCategory(updatedCampaign))
+	c.JSON(http.StatusOK, response)
+}

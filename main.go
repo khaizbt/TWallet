@@ -35,11 +35,17 @@ func main() {
 
 	router := gin.Default()
 	api := router.Group("/api/v1/")
+
+	// Keluarga User
 	api.POST("register", userHandler.RegisterUser)
 	api.POST("login", userHandler.Login)
 	api.POST("check-email", userHandler.CheckEmailAvailablity)
+
+	//Keluarga Category
 	api.GET("category", authMiddleware(authService, userService), categoryHandler.GetCategory)
 	api.POST("create-category", authMiddleware(authService, userService), categoryHandler.CreateCategory)
+	api.GET("category/:id", authMiddleware(authService, userService), categoryHandler.GetCategoryDetail)
+	api.PUT("category/:id", authMiddleware(authService, userService), categoryHandler.UpdateCategory)
 	router.Run()
 }
 
