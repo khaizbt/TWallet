@@ -5,6 +5,7 @@ import (
 	"TWallet/category"
 	"TWallet/handler"
 	"TWallet/helper"
+	"TWallet/transactions"
 	"TWallet/user"
 	"log"
 	"net/http"
@@ -25,13 +26,16 @@ func main() {
 	}
 	userRepository := user.NewRepository(db)
 	categoryRepository := category.NewRepository(db)
+	transactionRepository := transactions.NewRepository(db)
 
 	userService := user.NewService(userRepository) //parsing data input dari user(Struct input) ke Struct user
 	categoryService := category.NewService(categoryRepository)
+	transactionService := transactions.NewService(transactionRepository)
 	authService := auth.NewServiceAuth()
 
 	userHandler := handler.NewuserHandler(userService, authService) //Parsing Input dari user ke user Service
 	categoryHandler := handler.NewCategoryHandler(categoryService)
+	transactionHandler := handler.NewTransactionHandler(transactionService)
 
 	router := gin.Default()
 	api := router.Group("/api/v1/")
@@ -46,6 +50,7 @@ func main() {
 	api.POST("create-category", authMiddleware(authService, userService), categoryHandler.CreateCategory)
 	api.GET("category/:id", authMiddleware(authService, userService), categoryHandler.GetCategoryDetail)
 	api.PUT("category/:id", authMiddleware(authService, userService), categoryHandler.UpdateCategory)
+	api.POST("create-transaction", authMiddleware(authService, userService), transactionHandler.CreateTransaction)
 	router.Run()
 }
 

@@ -140,8 +140,8 @@ func (h *categoryHandler) UpdateCategory(c *gin.Context) {
 
 	updatedCampaign, err := h.service.UpdateCampaign(inputID, inputData)
 	if err != nil {
-		responsError := helper.APIResponse("Update Campaign Failed #CGU0093", http.StatusBadRequest, "fail", nil)
-		c.JSON(http.StatusBadRequest, responsError)
+		responsError := helper.APIResponse("Update Campaign Failed #CGU0093", http.StatusUnauthorized, "fail", nil)
+		c.JSON(http.StatusUnauthorized, responsError)
 		return
 	}
 
