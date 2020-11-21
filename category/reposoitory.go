@@ -3,9 +3,10 @@ package category
 import "gorm.io/gorm"
 
 type Repository interface {
-	ListCategory() ([]Category, error)
+	ListCategory(userID int) ([]Category, error)
 	Save(category Category) (Category, error)
-	Update(category Category) (Category, error)
+	// Update(category Category) (Category, error)
+	FindByID(ID int) (Category, error)
 }
 
 type repository struct {
@@ -19,6 +20,26 @@ func NewRepository(db *gorm.DB) *repository {
 func (r *repository) ListCategory(UserID int) ([]Category, error) {
 	var category []Category
 	err := r.db.Where("user_id = ?", UserID).Find(&category).Error //Get All List category by User Login
+
+	if err != nil {
+		return category, err
+	}
+
+	return category, nil
+}
+
+func (r *repository) Save(category Category) (Category, error) {
+	err := r.db.Create(&category).Error
+	if err != nil {
+		return category, err
+	}
+
+	return category, nil
+}
+
+func (r *repository) FindByID(ID int) (Category, error) {
+	var category Category
+	err := r.db.Preload("User").Where("id = ?", ID).Find(&category).Error
 
 	if err != nil {
 		return category, err
