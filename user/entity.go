@@ -11,6 +11,7 @@ type User struct {
 	Password    string
 	AvatarImage string
 	Role        string
+	Balance     int
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 }

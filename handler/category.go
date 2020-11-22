@@ -140,11 +140,34 @@ func (h *categoryHandler) UpdateCategory(c *gin.Context) {
 
 	updatedCampaign, err := h.service.UpdateCampaign(inputID, inputData)
 	if err != nil {
-		responsError := helper.APIResponse("Update Campaign Failed #CGU0093", http.StatusBadRequest, "fail", nil)
-		c.JSON(http.StatusBadRequest, responsError)
+		responsError := helper.APIResponse("Update Campaign Failed #CGU0093", http.StatusUnauthorized, "fail", nil)
+		c.JSON(http.StatusUnauthorized, responsError)
 		return
 	}
 
 	response := helper.APIResponse("Update Campaign Success", http.StatusOK, "success", category.FormatCategory(updatedCampaign))
 	c.JSON(http.StatusOK, response)
+}
+
+func (h *categoryHandler) DeleteCategory(c *gin.Context) {
+	var input category.CategoryUserInput
+
+	err := c.ShouldBindUri(&input)
+
+	if err != nil {
+		responsError := helper.APIResponse("Delete Category Failed #CHT091", http.StatusBadRequest, "fail", nil)
+		c.JSON(http.StatusBadRequest, responsError)
+		return
+	}
+
+	_, err = h.service.DeleteCategory(input)
+	if err != nil {
+		responsError := helper.APIResponse("Delete Category Failed #CHT017", http.StatusBadRequest, "fail", nil)
+		c.JSON(http.StatusBadRequest, responsError)
+		return
+	}
+
+	response := helper.APIResponse("Delete Category Success", http.StatusOK, "success", true)
+	c.JSON(http.StatusOK, response)
+	return
 }

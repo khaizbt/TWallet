@@ -7,6 +7,7 @@ type Repository interface {
 	Save(category Category) (Category, error)
 	Update(category Category) (Category, error)
 	FindByID(ID int) (Category, error)
+	DeleteCategory(ID int) (Category, error)
 }
 
 type repository struct {
@@ -51,6 +52,16 @@ func (r *repository) FindByID(ID int) (Category, error) {
 func (r *repository) Update(category Category) (Category, error) {
 	err := r.db.Save(&category).Error
 
+	if err != nil {
+		return category, err
+	}
+
+	return category, nil
+}
+
+func (r *repository) DeleteCategory(ID int) (Category, error) {
+	var category Category
+	err := r.db.Delete(&category, ID).Error
 	if err != nil {
 		return category, err
 	}
