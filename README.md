@@ -18,10 +18,6 @@ $ go get -u gorm.io/driver/mysql
 ```bash
 $ go get -u github.com/dgrijalva/jwt-go
 ```
-
-```bash
-$ go get -u github.com/gosimple/slug
-```
 ## Usage
 
 1. You can Export SQL File to Your MySQL like PHPMyadmin first
