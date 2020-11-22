@@ -50,7 +50,13 @@ func main() {
 	api.POST("create-category", authMiddleware(authService, userService), categoryHandler.CreateCategory)
 	api.GET("category/:id", authMiddleware(authService, userService), categoryHandler.GetCategoryDetail)
 	api.PUT("category/:id", authMiddleware(authService, userService), categoryHandler.UpdateCategory)
+	api.DELETE("category/:id", authMiddleware(authService, userService), categoryHandler.DeleteCategory)
+
+	//Keluarga Transaksi
+	api.GET("transaction", authMiddleware(authService, userService), transactionHandler.GetTransaction)
 	api.POST("create-transaction", authMiddleware(authService, userService), transactionHandler.CreateTransaction)
+	api.GET("transaction/:id", authMiddleware(authService, userService), transactionHandler.GetTransactionDetail)
+	api.DELETE("transaction/:id", authMiddleware(authService, userService), transactionHandler.DeleteTransaction)
 	router.Run()
 }
 

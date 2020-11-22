@@ -12,3 +12,7 @@ type TransactionUserInput struct {
 	User        user.User
 	// Category    category.Category
 }
+
+type IDUserInput struct {
+	ID int `uri:"id" binding:"required"`
+}

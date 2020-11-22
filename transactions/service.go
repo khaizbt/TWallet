@@ -8,9 +8,12 @@ import (
 )
 
 type Service interface {
+	GetTransaction(UserID int) ([]Transaction, error)
 	SaveTransaction(input TransactionUserInput) (Transaction, error)
 	CheckTypeCategory(UserID int, ID int) (category.Category, error)
 	UpdateUser(ID int, data int) (user.User, error)
+	GetDetailTransaction(input IDUserInput) (Transaction, error)
+	DeleteTransaction(input IDUserInput) (Transaction, error)
 }
 
 type service struct { //Internal Struct
@@ -19,6 +22,16 @@ type service struct { //Internal Struct
 
 func NewService(repository Repository) *service { //
 	return &service{repository} //mengirim ke interface harus pake pointer(ke alamat)
+}
+
+func (s *service) GetTransaction(UserID int) ([]Transaction, error) {
+	transaction, err := s.repository.ListTransaction(UserID)
+
+	if err != nil {
+		return transaction, err
+	}
+
+	return transaction, nil
 }
 
 func (s *service) SaveTransaction(input TransactionUserInput) (Transaction, error) {
@@ -42,7 +55,7 @@ func (s *service) SaveTransaction(input TransactionUserInput) (Transaction, erro
 
 func (s *service) CheckTypeCategory(UserID int, ID int) (category.Category, error) {
 
-	category, err := s.repository.FindByID(ID)
+	category, err := s.repository.FindByCategoryID(ID)
 	if err != nil {
 		return category, err
 	}
@@ -71,4 +84,24 @@ func (s *service) UpdateUser(ID int, data int) (user.User, error) {
 
 	return updatedUser, err
 
+}
+
+func (s *service) GetDetailTransaction(input IDUserInput) (Transaction, error) {
+	transaction, err := s.repository.DetailTransaction(input.ID)
+
+	if err != nil {
+		return transaction, err
+	}
+
+	return transaction, nil
+}
+
+func (s *service) DeleteTransaction(input IDUserInput) (Transaction, error) {
+	transaction, err := s.repository.DeleteTransaction(input.ID)
+
+	if err != nil {
+		return transaction, err
+	}
+
+	return transaction, nil
 }

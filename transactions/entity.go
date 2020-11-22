@@ -1,5 +1,11 @@
 package transactions
 
+import (
+	"TWallet/category"
+	"TWallet/user"
+	"time"
+)
+
 type Transaction struct {
 	ID          int
 	UserID      int
@@ -7,9 +13,8 @@ type Transaction struct {
 	Name        string
 	Nominal     int
 	Description string
-}
-
-type User struct {
-	ID      int
-	Balance int
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
+	User        user.User
+	Category    category.Category
 }

@@ -8,6 +8,7 @@ type Service interface {
 	CreateCategory(input CreateCategoryInput) (Category, error)
 	UpdateCampaign(inputID CategoryUserInput, inputData CreateCategoryInput) (Category, error)
 	CheckTypeCategory(ID int) (Category, error)
+	DeleteCategory(input CategoryUserInput) (Category, error)
 }
 
 type service struct {
@@ -81,6 +82,16 @@ func (s *service) UpdateCampaign(inputID CategoryUserInput, inputData CreateCate
 func (s *service) CheckTypeCategory(ID int) (Category, error) {
 
 	category, err := s.repository.FindByID(ID)
+
+	if err != nil {
+		return category, err
+	}
+
+	return category, nil
+}
+
+func (s *service) DeleteCategory(input CategoryUserInput) (Category, error) {
+	category, err := s.repository.DeleteCategory(input.ID)
 
 	if err != nil {
 		return category, err
