@@ -34,6 +34,33 @@ func (h *transactionHandler) GetTransaction(c *gin.Context) {
 
 }
 
+func (h *transactionHandler) GetTransactionByDates(c *gin.Context) {
+	var input transactions.TransactionFilterDate
+
+	err := c.ShouldBindJSON(&input)
+	if err != nil {
+		errorMessage := gin.H{"errors": helper.FormatValidationError(err)}
+
+		responsError := helper.APIResponse("Get List Transaction Failed #CRC090", http.StatusUnprocessableEntity, "fail", errorMessage)
+		c.JSON(http.StatusUnprocessableEntity, responsError)
+		return
+	}
+
+	currentUser := c.MustGet("currentUser").(user.User)
+	userID := currentUser.ID
+
+	campaigns, err := h.service.GetTransactionByDate(userID, input.StartDate, input.EndDate)
+	if err != nil {
+		responsError := helper.APIResponse("Get Campaign Failed #CG0019", http.StatusBadRequest, "fail", nil)
+		c.JSON(http.StatusBadRequest, responsError)
+		return
+	}
+
+	responsSuccess := helper.APIResponse("Get Campaign Success", http.StatusOK, "success", transactions.FormatTransactions(campaigns))
+	c.JSON(http.StatusOK, responsSuccess)
+
+}
+
 func (h *transactionHandler) CreateTransaction(c *gin.Context) {
 	var input transactions.TransactionUserInput
 
@@ -102,10 +129,12 @@ func (h *transactionHandler) GetTransactionDetail(c *gin.Context) {
 		return
 	}
 
-	campaignDetail, err := h.service.GetDetailTransaction(input)
+	currentUser := c.MustGet("currentUser").(user.User).ID
+
+	campaignDetail, err := h.service.GetDetailTransaction(input, currentUser)
 	if err != nil {
-		responsError := helper.APIResponse("Get Campaign Detail Failed #CGD0872", http.StatusBadRequest, "fail", nil)
-		c.JSON(http.StatusBadRequest, responsError)
+		responsError := helper.APIResponse("Get Campaign Detail Failed #CGD0872", http.StatusUnauthorized, "fail", nil)
+		c.JSON(http.StatusUnauthorized, responsError)
 		return
 	}
 
@@ -125,10 +154,12 @@ func (h *transactionHandler) DeleteTransaction(c *gin.Context) {
 		return
 	}
 
-	_, err = h.service.DeleteTransaction(input)
+	currentUser := c.MustGet("currentUser").(user.User).ID
+
+	_, err = h.service.DeleteTransaction(input, currentUser)
 	if err != nil {
-		responsError := helper.APIResponse("Delete Transaction Failed #TRX01891", http.StatusBadRequest, "fail", nil)
-		c.JSON(http.StatusBadRequest, responsError)
+		responsError := helper.APIResponse("Delete Transaction Failed #TRX01891", http.StatusUnauthorized, "fail", nil)
+		c.JSON(http.StatusUnauthorized, responsError)
 		return
 	}
 

@@ -4,11 +4,11 @@ import "errors"
 
 type Service interface {
 	GetCategory(userID int) ([]Category, error)
-	GetDetailCategory(input CategoryUserInput) (Category, error)
+	GetDetailCategory(input CategoryUserInput, UserID int) (Category, error)
 	CreateCategory(input CreateCategoryInput) (Category, error)
 	UpdateCampaign(inputID CategoryUserInput, inputData CreateCategoryInput) (Category, error)
 	CheckTypeCategory(ID int) (Category, error)
-	DeleteCategory(input CategoryUserInput) (Category, error)
+	DeleteCategory(input CategoryUserInput, UserID int) (Category, error)
 }
 
 type service struct {
@@ -28,14 +28,18 @@ func (s *service) GetCategory(userID int) ([]Category, error) {
 	return category, nil
 }
 
-func (s *service) GetDetailCategory(input CategoryUserInput) (Category, error) {
-	campaign, err := s.repository.FindByID(input.ID)
+func (s *service) GetDetailCategory(input CategoryUserInput, UserID int) (Category, error) {
+	category, err := s.repository.FindByID(input.ID)
 
-	if err != nil {
-		return campaign, err
+	if category.UserID != UserID {
+		return category, errors.New("You not an owner this category")
 	}
 
-	return campaign, nil
+	if err != nil {
+		return category, err
+	}
+
+	return category, nil
 }
 
 func (s *service) CreateCategory(input CreateCategoryInput) (Category, error) {
@@ -90,8 +94,12 @@ func (s *service) CheckTypeCategory(ID int) (Category, error) {
 	return category, nil
 }
 
-func (s *service) DeleteCategory(input CategoryUserInput) (Category, error) {
+func (s *service) DeleteCategory(input CategoryUserInput, UserID int) (Category, error) {
 	category, err := s.repository.DeleteCategory(input.ID)
+
+	if category.UserID != UserID { //Handle ketika edit campaign user lain
+		return category, errors.New("Not an owner of the campaign")
+	}
 
 	if err != nil {
 		return category, err

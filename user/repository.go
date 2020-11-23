@@ -8,7 +8,8 @@ type Repository interface {
 	Save(user User) (User, error)
 	FindByEmail(email string) (User, error)
 	FindByID(ID int) (User, error)
-	Update(user User) (User, error) // Mengambil struct User buat Param dan dikembalikan User yang sudah update
+	Update(user User) (User, error)
+	CekSaldo(ID int) (User, error)
 }
 
 type repository struct {
@@ -54,6 +55,18 @@ func (r *repository) FindByID(ID int) (User, error) {
 
 func (r *repository) Update(user User) (User, error) {
 	err := r.db.Save(&user).Error //Menggunakan Save karena untuk update/menyimpan data yang sudah ada
+
+	if err != nil {
+		return user, err
+	}
+
+	return user, nil
+}
+
+func (r *repository) CekSaldo(ID int) (User, error) {
+	var user User
+
+	err := r.db.Where("id = ?", ID).Find(&user).Error
 
 	if err != nil {
 		return user, err

@@ -16,3 +16,8 @@ type TransactionUserInput struct {
 type IDUserInput struct {
 	ID int `uri:"id" binding:"required"`
 }
+
+type TransactionFilterDate struct {
+	StartDate string `json:"start_date" binding:"required"`
+	EndDate   string `json:"end_date" binding:"required"`
+}

@@ -62,11 +62,13 @@ func (h *categoryHandler) GetCategoryDetail(c *gin.Context) {
 		return
 	}
 
-	campaignDetail, err := h.service.GetDetailCategory(input)
+	currentUser := c.MustGet("currentUser").(user.User).ID
+
+	campaignDetail, err := h.service.GetDetailCategory(input, currentUser)
 
 	if err != nil {
-		responsError := helper.APIResponse("Get Campaign Detail Failed #CGD0872", http.StatusBadRequest, "fail", nil)
-		c.JSON(http.StatusBadRequest, responsError)
+		responsError := helper.APIResponse("Get Campaign Detail Failed #CGD0872", http.StatusUnauthorized, "fail", nil)
+		c.JSON(http.StatusUnauthorized, responsError)
 		return
 	}
 
@@ -160,10 +162,12 @@ func (h *categoryHandler) DeleteCategory(c *gin.Context) {
 		return
 	}
 
-	_, err = h.service.DeleteCategory(input)
+	currentUser := c.MustGet("currentUser").(user.User).ID
+
+	_, err = h.service.DeleteCategory(input, currentUser)
 	if err != nil {
-		responsError := helper.APIResponse("Delete Category Failed #CHT017", http.StatusBadRequest, "fail", nil)
-		c.JSON(http.StatusBadRequest, responsError)
+		responsError := helper.APIResponse("Delete Category Failed #CHT017", http.StatusUnauthorized, "fail", nil)
+		c.JSON(http.StatusUnauthorized, responsError)
 		return
 	}
 

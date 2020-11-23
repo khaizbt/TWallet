@@ -12,6 +12,7 @@ type Service interface {
 	IsEmailAvailable(input CheckEmailInput) (bool, error)
 	UploadAvatar(ID int, location string) (User, error)
 	GetUserById(ID int) (User, error)
+	GetBalance(ID int) (User, error)
 }
 
 type service struct { //Internal Struct
@@ -118,6 +119,16 @@ func (s *service) GetUserById(ID int) (User, error) {
 
 	if user.ID != ID {
 		return user, errors.New("User Tidak Ditemukan")
+	}
+
+	return user, nil
+}
+
+func (s *service) GetBalance(ID int) (User, error) {
+	user, err := s.repository.CekSaldo(ID)
+
+	if err != nil {
+		return user, err
 	}
 
 	return user, nil

@@ -9,11 +9,12 @@ import (
 
 type Service interface {
 	GetTransaction(UserID int) ([]Transaction, error)
+	GetTransactionByDate(UserID int, StartDate string, EndDate string) ([]Transaction, error)
 	SaveTransaction(input TransactionUserInput) (Transaction, error)
 	CheckTypeCategory(UserID int, ID int) (category.Category, error)
 	UpdateUser(ID int, data int) (user.User, error)
-	GetDetailTransaction(input IDUserInput) (Transaction, error)
-	DeleteTransaction(input IDUserInput) (Transaction, error)
+	GetDetailTransaction(input IDUserInput, UserID int) (Transaction, error)
+	DeleteTransaction(input IDUserInput, UserID int) (Transaction, error)
 }
 
 type service struct { //Internal Struct
@@ -26,6 +27,16 @@ func NewService(repository Repository) *service { //
 
 func (s *service) GetTransaction(UserID int) ([]Transaction, error) {
 	transaction, err := s.repository.ListTransaction(UserID)
+
+	if err != nil {
+		return transaction, err
+	}
+
+	return transaction, nil
+}
+
+func (s *service) GetTransactionByDate(UserID int, StartDate string, EndDate string) ([]Transaction, error) {
+	transaction, err := s.repository.ListTransactionFilter(UserID, StartDate, EndDate)
 
 	if err != nil {
 		return transaction, err
@@ -86,8 +97,12 @@ func (s *service) UpdateUser(ID int, data int) (user.User, error) {
 
 }
 
-func (s *service) GetDetailTransaction(input IDUserInput) (Transaction, error) {
+func (s *service) GetDetailTransaction(input IDUserInput, UserID int) (Transaction, error) {
 	transaction, err := s.repository.DetailTransaction(input.ID)
+
+	if transaction.UserID != UserID {
+		return transaction, errors.New("You not an owner this transaction")
+	}
 
 	if err != nil {
 		return transaction, err
@@ -96,8 +111,12 @@ func (s *service) GetDetailTransaction(input IDUserInput) (Transaction, error) {
 	return transaction, nil
 }
 
-func (s *service) DeleteTransaction(input IDUserInput) (Transaction, error) {
+func (s *service) DeleteTransaction(input IDUserInput, UserID int) (Transaction, error) {
 	transaction, err := s.repository.DeleteTransaction(input.ID)
+
+	if transaction.UserID != UserID {
+		return transaction, errors.New("You not an owner this transaction")
+	}
 
 	if err != nil {
 		return transaction, err
