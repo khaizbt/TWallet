@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 22 Nov 2020 pada 07.59
+-- Waktu pembuatan: 23 Nov 2020 pada 13.30
 -- Versi server: 10.4.11-MariaDB
 -- Versi PHP: 7.3.16
 
@@ -59,21 +59,6 @@ CREATE TABLE `campaigns` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `campaign_images`
---
-
-CREATE TABLE `campaign_images` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `campaign_id` bigint(20) UNSIGNED NOT NULL,
-  `file_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `is_primary` tinyint(4) NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
 -- Struktur dari tabel `categories`
 --
 
@@ -93,48 +78,7 @@ CREATE TABLE `categories` (
 
 INSERT INTO `categories` (`id`, `user_id`, `name`, `type`, `description`, `created_at`, `updated_at`) VALUES
 (1, 1, 'Gajian', 'Pemasukan', 'ini adalah Kategory 1', '2020-11-21 21:22:49', '2020-11-21 21:22:49'),
-(3, 2, 'Bayar Utang', 'Pengeluaran', 'ini adalah Kategory 1', '2020-11-21 22:43:54', '2020-11-21 22:43:54');
-
--- --------------------------------------------------------
-
---
--- Struktur dari tabel `migrations`
---
-
-CREATE TABLE `migrations` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `batch` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data untuk tabel `migrations`
---
-
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
-(1, '2014_10_12_000000_create_users_table', 1),
-(2, '2020_11_06_175027_create_campaigns_table', 1),
-(3, '2020_11_06_175813_create_campaign_images_table', 1),
-(4, '2020_11_06_180000_create_transactions_table', 1),
-(5, '2020_11_07_190852_create_otp_codes_table', 1),
-(8, '2020_11_14_165711_add_column_current_amount', 2),
-(9, '2020_11_21_165654_create_categories_table', 2),
-(10, '2020_11_21_194024_create_balances_table', 3),
-(12, '2020_11_21_201801_add_column_balance', 4);
-
--- --------------------------------------------------------
-
---
--- Struktur dari tabel `otp_codes`
---
-
-CREATE TABLE `otp_codes` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `code` int(11) NOT NULL,
-  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+(7, 1, 'Nongki di Cafe', 'Pengeluaran', 'Biar Ngoding enak ya nongki', '2020-11-23 12:29:06', '2020-11-23 12:29:06');
 
 -- --------------------------------------------------------
 
@@ -158,8 +102,7 @@ CREATE TABLE `transactions` (
 --
 
 INSERT INTO `transactions` (`id`, `category_id`, `user_id`, `name`, `nominal`, `description`, `created_at`, `updated_at`) VALUES
-(1, 3, 2, 'Bayar Utang Beli PS5', 3000, 'Kemarin Hutang 5 juta tapi tak bayar 3k dulu', '2020-11-22 06:17:37', '2020-11-22 06:17:37'),
-(4, 3, 2, 'Bayar Utang Beli PS5', 3000, 'Kemarin Hutang 5 juta tapi tak bayar 3k dulu', '2020-11-22 06:33:36', '2020-11-22 06:33:36');
+(5, 1, 1, 'Gajian', 9000, 'Kemarin Hutang 5 juta tapi tak bayar 3k dulu', '2020-11-23 05:54:14', '2020-11-23 05:54:14');
 
 -- --------------------------------------------------------
 
@@ -184,7 +127,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `password`, `avatar_image`, `role`, `balance`, `created_at`, `updated_at`) VALUES
-(1, 'Khaiz Badaru Tammam', 'khaiz@gmail.com', '$2a$04$E8.J4gG6i89AAEy5EPoLfeL/9yS7PVG3WJcBmNqnspzflNaxKle5m', '', 'user', 0, '2020-11-21 16:39:39', '2020-11-21 16:39:39'),
+(1, 'Khaiz Badaru Tammam', 'khaiz@gmail.com', '$2a$04$E8.J4gG6i89AAEy5EPoLfeL/9yS7PVG3WJcBmNqnspzflNaxKle5m', '', 'user', 9000, '2020-11-21 16:39:39', '2020-11-23 05:54:14'),
 (2, 'Khafif Damanhuri', 'khafif@gmail.com', '$2a$04$RXKQaKnHpec2tWnBcfhtheDZ9GfGZcgkoXubBTwDd7/pyLK.k2KR.', '', 'user', 16000, '2020-11-21 18:59:55', '2020-11-22 06:33:36');
 
 --
@@ -206,30 +149,11 @@ ALTER TABLE `campaigns`
   ADD KEY `campaigns_user_id_foreign` (`user_id`);
 
 --
--- Indeks untuk tabel `campaign_images`
---
-ALTER TABLE `campaign_images`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `campaign_images_campaign_id_foreign` (`campaign_id`);
-
---
 -- Indeks untuk tabel `categories`
 --
 ALTER TABLE `categories`
   ADD PRIMARY KEY (`id`),
   ADD KEY `categories_user_id_foreign` (`user_id`);
-
---
--- Indeks untuk tabel `migrations`
---
-ALTER TABLE `migrations`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indeks untuk tabel `otp_codes`
---
-ALTER TABLE `otp_codes`
-  ADD PRIMARY KEY (`id`);
 
 --
 -- Indeks untuk tabel `transactions`
@@ -263,34 +187,16 @@ ALTER TABLE `campaigns`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `campaign_images`
---
-ALTER TABLE `campaign_images`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT untuk tabel `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
--- AUTO_INCREMENT untuk tabel `migrations`
---
-ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
-
---
--- AUTO_INCREMENT untuk tabel `otp_codes`
---
-ALTER TABLE `otp_codes`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT untuk tabel `transactions`
 --
 ALTER TABLE `transactions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT untuk tabel `users`
@@ -313,12 +219,6 @@ ALTER TABLE `balances`
 --
 ALTER TABLE `campaigns`
   ADD CONSTRAINT `campaigns_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Ketidakleluasaan untuk tabel `campaign_images`
---
-ALTER TABLE `campaign_images`
-  ADD CONSTRAINT `campaign_images_campaign_id_foreign` FOREIGN KEY (`campaign_id`) REFERENCES `campaigns` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Ketidakleluasaan untuk tabel `categories`
