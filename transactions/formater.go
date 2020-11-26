@@ -55,8 +55,8 @@ func FormatTransactions(transactions []Transaction) []TransactionFormater {
 	transactionsFormater := []TransactionFormater{}
 
 	for _, transaction := range transactions {
-		transactionFormater := FormatTransaction(transaction)                    //Pemanggilan Fungsi Format Campaign
-		transactionsFormater = append(transactionsFormater, transactionFormater) //Perhatikan ada huruf s yang berarti jamak
+		transactionFormater := FormatTransaction(transaction)
+		transactionsFormater = append(transactionsFormater, transactionFormater)
 	}
 
 	return transactionsFormater

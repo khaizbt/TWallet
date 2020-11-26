@@ -6,7 +6,7 @@ type Service interface {
 	GetCategory(userID int) ([]Category, error)
 	GetDetailCategory(input CategoryUserInput, UserID int) (Category, error)
 	CreateCategory(input CreateCategoryInput) (Category, error)
-	UpdateCampaign(inputID CategoryUserInput, inputData CreateCategoryInput) (Category, error)
+	UpdateCategory(inputID CategoryUserInput, inputData CreateCategoryInput) (Category, error)
 	CheckTypeCategory(ID int) (Category, error)
 	DeleteCategory(input CategoryUserInput, UserID int) (Category, error)
 }
@@ -59,28 +59,28 @@ func (s *service) CreateCategory(input CreateCategoryInput) (Category, error) {
 	return newCategory, nil
 }
 
-func (s *service) UpdateCampaign(inputID CategoryUserInput, inputData CreateCategoryInput) (Category, error) {
-	campaign, err := s.repository.FindByID(inputID.ID)
+func (s *service) UpdateCategory(inputID CategoryUserInput, inputData CreateCategoryInput) (Category, error) {
+	category, err := s.repository.FindByID(inputID.ID)
 
 	if err != nil {
-		return campaign, err
+		return category, err
 	}
 
-	if campaign.UserID != inputData.User.ID { //Handle ketika edit campaign user lain
-		return campaign, errors.New("Not an owner of the campaign")
+	if category.UserID != inputData.User.ID { //Handle ketika edit category user lain
+		return category, errors.New("Not an owner of the category")
 	}
 
-	campaign.Name = inputData.Name
-	campaign.Description = inputData.Description
-	campaign.Type = inputData.Type
+	category.Name = inputData.Name
+	category.Description = inputData.Description
+	category.Type = inputData.Type
 
-	updatedCampaign, err := s.repository.Update(campaign)
+	updatedCategory, err := s.repository.Update(category)
 
 	if err != nil {
-		return updatedCampaign, err
+		return updatedCategory, err
 	}
 
-	return updatedCampaign, nil
+	return updatedCategory, nil
 }
 
 func (s *service) CheckTypeCategory(ID int) (Category, error) {

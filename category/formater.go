@@ -22,8 +22,8 @@ func FormatCategories(categories []Category) []CategoryFormater {
 	categoriesFormater := []CategoryFormater{}
 
 	for _, category := range categories {
-		categoryFormater := FormatCategory(category)                      //Pemanggilan Fungsi Format Campaign
-		categoriesFormater = append(categoriesFormater, categoryFormater) //Perhatikan ada huruf s yang berarti jamak
+		categoryFormater := FormatCategory(category)
+		categoriesFormater = append(categoriesFormater, categoryFormater)
 	}
 
 	return categoriesFormater
@@ -43,7 +43,7 @@ type CategoryUserFormater struct {
 	ImageURL string `json:"image_url"`
 }
 
-func FormatCampaignDetail(category Category) CategoryDetailFormater {
+func FormatCategoryDetail(category Category) CategoryDetailFormater {
 	formater := CategoryDetailFormater{
 		ID:          category.ID,
 		UserID:      category.UserID,

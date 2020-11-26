@@ -22,14 +22,14 @@ func (h *transactionHandler) GetTransaction(c *gin.Context) {
 	currentUser := c.MustGet("currentUser").(user.User)
 	userID := currentUser.ID
 
-	campaigns, err := h.service.GetTransaction(userID)
+	transaction, err := h.service.GetTransaction(userID)
 	if err != nil {
-		responsError := helper.APIResponse("Get Campaign Failed #CG0019", http.StatusBadRequest, "fail", nil)
+		responsError := helper.APIResponse("Get Transaction Failed #CG0019", http.StatusBadRequest, "fail", nil)
 		c.JSON(http.StatusBadRequest, responsError)
 		return
 	}
 
-	responsSuccess := helper.APIResponse("Get Campaign Success", http.StatusOK, "success", transactions.FormatTransactions(campaigns))
+	responsSuccess := helper.APIResponse("Get Transaction Success", http.StatusOK, "success", transactions.FormatTransactions(transaction))
 	c.JSON(http.StatusOK, responsSuccess)
 
 }
@@ -49,14 +49,14 @@ func (h *transactionHandler) GetTransactionByDates(c *gin.Context) {
 	currentUser := c.MustGet("currentUser").(user.User)
 	userID := currentUser.ID
 
-	campaigns, err := h.service.GetTransactionByDate(userID, input.StartDate, input.EndDate)
+	transaction, err := h.service.GetTransactionByDate(userID, input.StartDate, input.EndDate)
 	if err != nil {
-		responsError := helper.APIResponse("Get Campaign Failed #CG0019", http.StatusBadRequest, "fail", nil)
+		responsError := helper.APIResponse("Get Transaction Failed #CG0019", http.StatusBadRequest, "fail", nil)
 		c.JSON(http.StatusBadRequest, responsError)
 		return
 	}
 
-	responsSuccess := helper.APIResponse("Get Campaign Success", http.StatusOK, "success", transactions.FormatTransactions(campaigns))
+	responsSuccess := helper.APIResponse("Get Transaction Success", http.StatusOK, "success", transactions.FormatTransactions(transaction))
 	c.JSON(http.StatusOK, responsSuccess)
 
 }
@@ -68,7 +68,7 @@ func (h *transactionHandler) CreateTransaction(c *gin.Context) {
 	if err != nil {
 		errorMessage := gin.H{"errors": helper.FormatValidationError(err)}
 
-		responsError := helper.APIResponse("Create Category Failed #CRC090", http.StatusUnprocessableEntity, "fail", errorMessage)
+		responsError := helper.APIResponse("Create Transaction Failed #CRC090", http.StatusUnprocessableEntity, "fail", errorMessage)
 		c.JSON(http.StatusUnprocessableEntity, responsError)
 		return
 	}
@@ -80,7 +80,7 @@ func (h *transactionHandler) CreateTransaction(c *gin.Context) {
 
 	if err != nil {
 		if err != nil {
-			responsError := helper.APIResponse("Create Campaign Failed #CRC097", http.StatusUnauthorized, "fail", nil)
+			responsError := helper.APIResponse("Create Transaction Failed #CRC097", http.StatusUnauthorized, "fail", nil)
 			c.JSON(http.StatusUnauthorized, responsError)
 			return
 		}
@@ -91,7 +91,7 @@ func (h *transactionHandler) CreateTransaction(c *gin.Context) {
 		_, err := h.service.UpdateUser(currentUser.ID, nominal)
 
 		if err != nil {
-			responsError := helper.APIResponse("Create Campaign Failed #CRC097", http.StatusBadGateway, "fail", nil)
+			responsError := helper.APIResponse("Create Transaction Failed #CRC097", http.StatusBadGateway, "fail", nil)
 			c.JSON(http.StatusBadGateway, responsError)
 			return
 		}
@@ -100,20 +100,20 @@ func (h *transactionHandler) CreateTransaction(c *gin.Context) {
 		_, err := h.service.UpdateUser(currentUser.ID, nominal)
 
 		if err != nil {
-			responsError := helper.APIResponse("Create Campaign Failed #CRC097", http.StatusBadGateway, "fail", nil)
+			responsError := helper.APIResponse("Create Transaction Failed #CRC097", http.StatusBadGateway, "fail", nil)
 			c.JSON(http.StatusBadGateway, responsError)
 			return
 		}
 	}
 	input.User = currentUser
-	newCampaign, err := h.service.SaveTransaction(input)
+	newTransaction, err := h.service.SaveTransaction(input)
 	if err != nil {
-		responsError := helper.APIResponse("Create Campaign Failed #CRC097", http.StatusBadGateway, "fail", nil)
+		responsError := helper.APIResponse("Create Transaction Failed #CRC097", http.StatusBadGateway, "fail", nil)
 		c.JSON(http.StatusBadGateway, responsError)
 		return
 	}
 
-	response := helper.APIResponse("Create Campaign Success", http.StatusOK, "success", transactions.FormatTransactionCreate(newCampaign))
+	response := helper.APIResponse("Create Transaction Success", http.StatusOK, "success", transactions.FormatTransactionCreate(newTransaction))
 	c.JSON(http.StatusOK, response)
 
 }
@@ -124,21 +124,21 @@ func (h *transactionHandler) GetTransactionDetail(c *gin.Context) {
 	err := c.ShouldBindUri(&input)
 
 	if err != nil {
-		responsError := helper.APIResponse("Get Campaign Detail Failed #CGD0871", http.StatusBadRequest, "fail", nil)
+		responsError := helper.APIResponse("Get Transaction Detail Failed #CGD0871", http.StatusBadRequest, "fail", nil)
 		c.JSON(http.StatusBadRequest, responsError)
 		return
 	}
 
 	currentUser := c.MustGet("currentUser").(user.User).ID
 
-	campaignDetail, err := h.service.GetDetailTransaction(input, currentUser)
+	transactionDetail, err := h.service.GetDetailTransaction(input, currentUser)
 	if err != nil {
-		responsError := helper.APIResponse("Get Campaign Detail Failed #CGD0872", http.StatusUnauthorized, "fail", nil)
+		responsError := helper.APIResponse("Get Transaction Detail Failed #CGD0872", http.StatusUnauthorized, "fail", nil)
 		c.JSON(http.StatusUnauthorized, responsError)
 		return
 	}
 
-	response := helper.APIResponse("Get Campaign Detail Success", http.StatusOK, "success", transactions.FormatTransactionDetail(campaignDetail))
+	response := helper.APIResponse("Get Transaction Detail Success", http.StatusOK, "success", transactions.FormatTransactionDetail(transactionDetail))
 	c.JSON(http.StatusOK, response)
 	return
 }
