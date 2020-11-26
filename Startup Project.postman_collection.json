@@ -1,0 +1,329 @@
+{
+	"info": {
+		"_postman_id": "5831ef61-28ad-4144-85a4-b13f1d854661",
+		"name": "Startup Project",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Register User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\" : \"Khaiz Badaru Tammam\",\r\n    \"email\" : \"khaiz@gmail.com\",\r\n    \"occupation\" : \"Gamer\",\r\n    \"password\": \"sudahsayang\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}v1/register",
+							"host": [
+								"{{url}}v1"
+							],
+							"path": [
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\" : \"khaizdotid@gmail.com\",\r\n    \"password\" : \"sayangdia\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}v1/login",
+							"host": [
+								"{{url}}v1"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Check Email",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\" : \"tamamizid@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}v1/check-email",
+							"host": [
+								"{{url}}v1"
+							],
+							"path": [
+								"check-email"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload Avatar",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearer}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "avatar_image",
+									"type": "file",
+									"src": "/C:/Users/Tamam-Dev/Downloads/1007338.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}v1/upload-avatar",
+							"host": [
+								"{{url}}v1"
+							],
+							"path": [
+								"upload-avatar"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Campaigns",
+			"item": [
+				{
+					"name": "Create Campaign",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearer}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Technopartner Indonesia\",\r\n    \"short_description\" : \"Perusahaan Teknologi\",\r\n    \"description\" : \"Perusahaan Loooooongggggggg\",\r\n    \"goal_amount\" : 100000,\r\n    \"perks\": \"perks 1, perks 2, perks 3\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}v1/campaign",
+							"host": [
+								"{{url}}v1"
+							],
+							"path": [
+								"campaign"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Campaigns",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearer}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}v1/campaigns",
+							"host": [
+								"{{url}}v1"
+							],
+							"path": [
+								"campaigns"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Campaign Detail",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearer}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}v1/campaign/8",
+							"host": [
+								"{{url}}v1"
+							],
+							"path": [
+								"campaign",
+								"8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Campaign",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearer}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"TPID\",\r\n    \"short_description\" : \"Perusahaan Ngoding\",\r\n    \"description\" : \"Perusahaan Long aja\",\r\n    \"goal_amount\" : 100,\r\n    \"perks\": \"perks 10, perks 20, perks 30, perks 50 bro\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}v1/campaign/2",
+							"host": [
+								"{{url}}v1"
+							],
+							"path": [
+								"campaign",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload Image",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearer}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "campaign_id",
+									"value": "6",
+									"type": "text"
+								},
+								{
+									"key": "is_primary",
+									"value": "true",
+									"type": "text"
+								},
+								{
+									"key": "campaign_image",
+									"type": "file",
+									"src": "/C:/Users/Tamam-Dev/Downloads/IMG_20190619_205955.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}v1/upload-image-campaign",
+							"host": [
+								"{{url}}v1"
+							],
+							"path": [
+								"upload-image-campaign"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "GET IMAGES",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}images/1007338.jpg",
+					"host": [
+						"{{url}}images"
+					],
+					"path": [
+						"1007338.jpg"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
