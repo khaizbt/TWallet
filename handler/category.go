@@ -30,26 +30,20 @@ func (h *categoryHandler) GetCategory(c *gin.Context) {
 	currentUser := c.MustGet("currentUser").(user.User)
 	userID := currentUser.ID
 
-	campaigns, err := h.service.GetCategory(userID)
+	categories, err := h.service.GetCategory(userID)
 	if err != nil {
-		responsError := helper.APIResponse("Get Campaign Failed #CG0019", http.StatusBadRequest, "fail", nil)
+		responsError := helper.APIResponse("Get Category Failed #CG0019", http.StatusBadRequest, "fail", nil)
 		c.JSON(http.StatusBadRequest, responsError)
 		return
 	}
 
-	responsSuccess := helper.APIResponse("Get Campaign Success", http.StatusOK, "success", category.FormatCategories(campaigns))
+	responsSuccess := helper.APIResponse("Get Category Success", http.StatusOK, "success", category.FormatCategories(categories))
 	c.JSON(http.StatusOK, responsSuccess)
 
 }
 
 /*
 GET DETAIL
-
-url /api/v1/campaign/:id-campaign
-Mapping id yang di URL ke struct input lalu parsing ke Service kemudian panggi formater
-Service : Struct Input dengan menangkap id dari url manggil repo
-Repository : get campaign by id
-DB
 */
 func (h *categoryHandler) GetCategoryDetail(c *gin.Context) {
 	var input category.CategoryUserInput
@@ -57,20 +51,22 @@ func (h *categoryHandler) GetCategoryDetail(c *gin.Context) {
 	err := c.ShouldBindUri(&input)
 
 	if err != nil {
-		responsError := helper.APIResponse("Get Campaign Detail Failed #CGD0871", http.StatusBadRequest, "fail", nil)
+		responsError := helper.APIResponse("Get Category Detail Failed #CGD0871", http.StatusBadRequest, "fail", nil)
 		c.JSON(http.StatusBadRequest, responsError)
 		return
 	}
 
-	campaignDetail, err := h.service.GetDetailCategory(input)
+	currentUser := c.MustGet("currentUser").(user.User).ID
+
+	categoryDetail, err := h.service.GetDetailCategory(input, currentUser)
 
 	if err != nil {
-		responsError := helper.APIResponse("Get Campaign Detail Failed #CGD0872", http.StatusBadRequest, "fail", nil)
-		c.JSON(http.StatusBadRequest, responsError)
+		responsError := helper.APIResponse("Get Category Detail Failed #CGD0872", http.StatusUnauthorized, "fail", nil)
+		c.JSON(http.StatusUnauthorized, responsError)
 		return
 	}
 
-	response := helper.APIResponse("Get Campaign Detail Success", http.StatusOK, "success", category.FormatCampaignDetail(campaignDetail))
+	response := helper.APIResponse("Get Category Detail Success", http.StatusOK, "success", category.FormatCategoryDetail(categoryDetail))
 	c.JSON(http.StatusOK, response)
 	return
 }
@@ -91,25 +87,21 @@ func (h *categoryHandler) CreateCategory(c *gin.Context) {
 
 	input.User = currentUser
 
-	newCampaign, err := h.service.CreateCategory(input)
+	newCategory, err := h.service.CreateCategory(input)
 	if err != nil {
-		responsError := helper.APIResponse("Create Campaign Failed #CRC097", http.StatusBadGateway, "fail", nil)
+		responsError := helper.APIResponse("Create Category Failed #CRC097", http.StatusBadGateway, "fail", nil)
 		c.JSON(http.StatusBadGateway, responsError)
 		return
 	}
 
-	response := helper.APIResponse("Create Campaign Success", http.StatusOK, "success", category.FormatCategory(newCampaign))
+	response := helper.APIResponse("Create Category Success", http.StatusOK, "success", category.FormatCategory(newCategory))
 	c.JSON(http.StatusOK, response)
 
 }
 
 /*
-Update Campaign
-1. User Melakukan Input
-2. Handler
-3. Mapping dari input dan URI ke struct
-4. Service
-5. Repository
+Update Category
+
 */
 
 func (h *categoryHandler) UpdateCategory(c *gin.Context) {
@@ -118,7 +110,7 @@ func (h *categoryHandler) UpdateCategory(c *gin.Context) {
 	err := c.ShouldBindUri(&inputID)
 
 	if err != nil {
-		responsError := helper.APIResponse("Update Campaign Failed #CGU0081", http.StatusBadRequest, "fail", nil)
+		responsError := helper.APIResponse("Update Category Failed #CGU0081", http.StatusBadRequest, "fail", nil)
 		c.JSON(http.StatusBadRequest, responsError)
 		return
 	}
@@ -129,7 +121,7 @@ func (h *categoryHandler) UpdateCategory(c *gin.Context) {
 	if err != nil {
 		errorMessage := gin.H{"errors": helper.FormatValidationError(err)}
 
-		responsError := helper.APIResponse("Update Campaign Failed #CGU0085", http.StatusUnprocessableEntity, "fail", errorMessage)
+		responsError := helper.APIResponse("Update Category Failed #CGU0085", http.StatusUnprocessableEntity, "fail", errorMessage)
 		c.JSON(http.StatusUnprocessableEntity, responsError)
 		return
 	}
@@ -138,14 +130,14 @@ func (h *categoryHandler) UpdateCategory(c *gin.Context) {
 
 	inputData.User = currentUser
 
-	updatedCampaign, err := h.service.UpdateCampaign(inputID, inputData)
+	updatedCategory, err := h.service.UpdateCategory(inputID, inputData)
 	if err != nil {
-		responsError := helper.APIResponse("Update Campaign Failed #CGU0093", http.StatusUnauthorized, "fail", nil)
+		responsError := helper.APIResponse("Update Category Failed #CGU0093", http.StatusUnauthorized, "fail", nil)
 		c.JSON(http.StatusUnauthorized, responsError)
 		return
 	}
 
-	response := helper.APIResponse("Update Campaign Success", http.StatusOK, "success", category.FormatCategory(updatedCampaign))
+	response := helper.APIResponse("Update Category Success", http.StatusOK, "success", category.FormatCategory(updatedCategory))
 	c.JSON(http.StatusOK, response)
 }
 
@@ -160,10 +152,12 @@ func (h *categoryHandler) DeleteCategory(c *gin.Context) {
 		return
 	}
 
-	_, err = h.service.DeleteCategory(input)
+	currentUser := c.MustGet("currentUser").(user.User).ID
+
+	_, err = h.service.DeleteCategory(input, currentUser)
 	if err != nil {
-		responsError := helper.APIResponse("Delete Category Failed #CHT017", http.StatusBadRequest, "fail", nil)
-		c.JSON(http.StatusBadRequest, responsError)
+		responsError := helper.APIResponse("Delete Category Failed #CHT017", http.StatusUnauthorized, "fail", nil)
+		c.JSON(http.StatusUnauthorized, responsError)
 		return
 	}
 

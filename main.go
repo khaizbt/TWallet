@@ -54,9 +54,11 @@ func main() {
 
 	//Keluarga Transaksi
 	api.GET("transaction", authMiddleware(authService, userService), transactionHandler.GetTransaction)
+	api.POST("transaction", authMiddleware(authService, userService), transactionHandler.GetTransactionByDates)
 	api.POST("create-transaction", authMiddleware(authService, userService), transactionHandler.CreateTransaction)
 	api.GET("transaction/:id", authMiddleware(authService, userService), transactionHandler.GetTransactionDetail)
 	api.DELETE("transaction/:id", authMiddleware(authService, userService), transactionHandler.DeleteTransaction)
+	api.GET("balance", authMiddleware(authService, userService), userHandler.GetBalanceUser)
 	router.Run()
 }
 

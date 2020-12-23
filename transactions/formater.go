@@ -1,13 +1,12 @@
 package transactions
 
 type TransactionFormater struct {
-	ID         int                  `json:"id"`
-	UserID     int                  `json:"user_id"`
-	CategoryID int                  `json:"category_id"`
-	Name       string               `json:"name"`
-	Nominal    int                  `json:"nominal"`
-	Category   CategoryFormater     `json:"category"`
-	User       CategoryUserFormater `json:"user"`
+	ID         int              `json:"id"`
+	UserID     int              `json:"user_id"`
+	CategoryID int              `json:"category_id"`
+	Name       string           `json:"name"`
+	Nominal    int              `json:"nominal"`
+	Category   CategoryFormater `json:"category"`
 }
 
 type TransactionDetailFormater struct {
@@ -56,8 +55,8 @@ func FormatTransactions(transactions []Transaction) []TransactionFormater {
 	transactionsFormater := []TransactionFormater{}
 
 	for _, transaction := range transactions {
-		transactionFormater := FormatTransaction(transaction)                    //Pemanggilan Fungsi Format Campaign
-		transactionsFormater = append(transactionsFormater, transactionFormater) //Perhatikan ada huruf s yang berarti jamak
+		transactionFormater := FormatTransaction(transaction)
+		transactionsFormater = append(transactionsFormater, transactionFormater)
 	}
 
 	return transactionsFormater

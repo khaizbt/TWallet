@@ -3,6 +3,8 @@ package transactions
 import (
 	"TWallet/category"
 	"TWallet/user"
+	"fmt"
+	"time"
 
 	"gorm.io/gorm"
 )
@@ -15,6 +17,7 @@ type Repository interface {
 	FindByIDUser(ID int) (user.User, error)
 	DetailTransaction(ID int) (Transaction, error)
 	DeleteTransaction(ID int) (Transaction, error)
+	ListTransactionFilter(UserID int, StartDate string, EndDate string) ([]Transaction, error)
 	// FindByID(ID int) (Category, error)
 	// UpdateBalance(user User) (User, error)
 }
@@ -29,12 +32,26 @@ func NewRepository(db *gorm.DB) *repository {
 
 func (r *repository) ListTransaction(UserID int) ([]Transaction, error) {
 	var transaction []Transaction
-	err := r.db.Where("user_id = ?", UserID).Preload("Category").Find(&transaction).Error //Get All List category by User Login
+
+	year, month, _ := time.Now().Date()
+	s := fmt.Sprintf("%d-%d-%d", year, int(month), 01)
+	err := r.db.Where("user_id = ?", UserID).Where("created_at > ?", s).Preload("Category").Find(&transaction).Error //Get All List category by User Login
 
 	if err != nil {
 		return transaction, err
 	}
+	// fmt.Sprintf("%s-")
+	return transaction, nil
+}
 
+func (r *repository) ListTransactionFilter(UserID int, StartDate string, EndDate string) ([]Transaction, error) {
+	var transaction []Transaction
+	err := r.db.Where("created_at BETWEEN ? AND ?", StartDate, EndDate).Where("user_id = ?", UserID).Preload("Category").Find(&transaction).Error
+
+	if err != nil {
+		return transaction, err
+	}
+	// fmt.Sprintf("%s-")
 	return transaction, nil
 }
 
@@ -91,6 +108,7 @@ func (r *repository) FindByIDUser(ID int) (user.User, error) { //Find ID User un
 
 func (r *repository) DetailTransaction(ID int) (Transaction, error) { //GetDetailTransaction
 	var transaction Transaction
+
 	err := r.db.Where("id = ?", ID).Preload("User").Preload("Category").Find(&transaction).Error
 
 	if err != nil {

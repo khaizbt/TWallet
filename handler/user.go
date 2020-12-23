@@ -185,3 +185,22 @@ func (h *userHandler) UploadAvatar(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 
 }
+
+func (h *userHandler) GetBalanceUser(c *gin.Context) {
+	currentUser := c.MustGet("currentUser").(user.User) //nilai default dari current User adalah interface, jadi harus diubah ke user.user dahulu agar bisa dipparsing
+	userID := currentUser.ID
+	dataUser, err := h.userService.GetBalance(userID)
+	if err != nil {
+		responsError := helper.APIResponse("Upload Image Failed #UPA003", http.StatusBadGateway, "fail", nil)
+		c.JSON(http.StatusBadGateway, responsError)
+		return
+	}
+
+	data := gin.H{
+		"name":    dataUser.Name,
+		"balance": dataUser.Balance,
+	}
+
+	response := helper.APIResponse("Get Balance Success", http.StatusOK, "success", data)
+	c.JSON(http.StatusOK, response)
+}
